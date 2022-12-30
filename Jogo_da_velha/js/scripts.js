@@ -29,6 +29,12 @@ for(let i = 0; i < boxes.length; i++){
             //*computar jogada
             if(player1 == player2){
                 player1++;
+
+                if(secondPlayer == 'ai-player'){
+                    //*função para executar jogada
+                    computerplay();
+                    player2++;
+                }
             }
             else{
                 player2++;
@@ -38,6 +44,26 @@ for(let i = 0; i < boxes.length; i++){
             checkWinCondition();
         }
 
+    });
+}
+
+//*evento para saber o modo de jogo: pvp ou pvia
+for(let i = 0; i < buttons.length; i++){
+    buttons[i].addEventListener("click", function(){
+        secondPlayer = this.getAttribute("id");
+
+        //*esconde o button
+        for(let j = 0; j < buttons.length; j++){
+            buttons[j].style.display = 'none';
+        }
+
+        //*mostra o jogo com um delay de .5 segundos
+        setTimeout(function(){
+
+            let container = document.querySelector("#container");
+            container.classList.remove("hide");
+
+        }, 500)
     });
 }
 
@@ -251,5 +277,34 @@ function declareWinner(winner){
     for(let i = 0; i < boxesToRemove.length; i++){
         //*seleciona a box e remove o childNode
         boxesToRemove[i].parentNode.removeChild(boxesToRemove[i]);
+    }
+}
+
+//*executar a jogada do cpu
+function computerplay(){
+
+    let cloneO = o.cloneNode(true);
+    counter = 0;
+    filled = 0;
+    
+    //*sorteando número da box a ser preenchida
+    for(let i = 0; i < boxes.length; i++){
+        
+        let randomNumber = Math.floor(Math.random() * 5);
+        //*só preencher quando o childNode estiver vazio
+        if(boxes[i].childNodes[0] == undefined){
+            if(randomNumber <= 1){
+                boxes[i].appendChild(cloneO);
+                counter++;
+                break;
+            }
+        }
+        else{
+            filled++;
+        }
+    }
+    //*checagem de quantas estão preenchidas
+    if(counter == 0 && filled <9){
+        computerplay();
     }
 }
